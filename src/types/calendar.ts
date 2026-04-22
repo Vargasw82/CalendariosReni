@@ -35,4 +35,29 @@ export interface CalendarConfig {
   month: number;
   mamaUnavailable: number[];
   papaUnavailable: number[];
+  firstPayDay?: number;
+}
+
+export interface SavedDayInfo {
+  dayOfMonth: number;
+  dayOfWeek: number;
+  tutor: Tutor;
+  lupitaStatus: 'ON' | 'OFF' | 'ARRIVES' | 'LEAVES';
+  isWeekend: boolean;
+  isPayDay: boolean;
+  whoPays?: Tutor;
+  notes?: string;
+}
+
+export interface SavedCalendar {
+  year: number;
+  month: number;
+  monthName: string;
+  days: SavedDayInfo[];
+  mamaCount: number;
+  papaCount: number;
+  mamaWeekends: number;
+  papaWeekends: number;
+  savedAt: string;
+  firstPayDay?: number;
 }

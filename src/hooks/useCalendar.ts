@@ -17,7 +17,7 @@ function isWeekendDay(dayOfWeek: number): boolean {
 
 export function useCalendar(config: CalendarConfig): CalendarMonth {
   return useMemo(() => {
-    const { year, month, mamaUnavailable, papaUnavailable } = config;
+    const { year, month, mamaUnavailable, papaUnavailable, firstPayDay } = config;
     const daysInMonth = getDaysInMonth(year, month);
 
     // Lupita: odd weekends ON, even weekends OFF
@@ -170,11 +170,26 @@ export function useCalendar(config: CalendarConfig): CalendarMonth {
     }
 
     // Step 5: Payments
-    const whoPays15: Tutor = month % 2 === 0 ? 'mama' : 'papa';
-    const whoPaysEnd: Tutor = whoPays15 === 'mama' ? 'papa' : 'mama';
+    const whoPays1st: Tutor = month % 2 === 0 ? 'mama' : 'papa';
+    const whoPays2nd: Tutor = whoPays1st === 'mama' ? 'papa' : 'mama';
 
-    let lastFriday = daysInMonth;
-    while (lastFriday > 0 && new Date(year, month, lastFriday).getDay() !== 5) lastFriday--;
+    let payDay1: number | null = null;
+    let payDay2: number | null = null;
+
+    if (firstPayDay) {
+      payDay1 = firstPayDay;
+      const second = firstPayDay + 14;
+      payDay2 = second <= daysInMonth ? second : null;
+    } else {
+      // Auto: primer viernes entre días 11-15
+      for (let d = 11; d <= 15; d++) {
+        if (new Date(year, month, d).getDay() === 5) { payDay1 = d; break; }
+      }
+      // Auto: último viernes del mes
+      let lf = daysInMonth;
+      while (lf > 0 && new Date(year, month, lf).getDay() !== 5) lf--;
+      if (lf > 0 && lf !== payDay1) payDay2 = lf;
+    }
 
     // Step 6: Build final days array
     const days: DayAssignment[] = [];
@@ -192,16 +207,14 @@ export function useCalendar(config: CalendarConfig): CalendarMonth {
       let isPayDay = false;
       let whoPays: Tutor | undefined;
 
-      if (dow === 5) {
-        if (d >= 11 && d <= 15) {
-          isPayDay = true;
-          whoPays = whoPays15;
-          comments.push(`PAGA ${whoPays15 === 'mama' ? 'MAMÁ' : 'PAPÁ'}`);
-        } else if (d >= 25 || d === lastFriday) {
-          isPayDay = true;
-          whoPays = whoPaysEnd;
-          comments.push(`PAGA ${whoPaysEnd === 'mama' ? 'MAMÁ' : 'PAPÁ'}`);
-        }
+      if (d === payDay1) {
+        isPayDay = true;
+        whoPays = whoPays1st;
+        comments.push(`PAGA ${whoPays1st === 'mama' ? 'MAMÁ' : 'PAPÁ'}`);
+      } else if (payDay2 && d === payDay2) {
+        isPayDay = true;
+        whoPays = whoPays2nd;
+        comments.push(`PAGA ${whoPays2nd === 'mama' ? 'MAMÁ' : 'PAPÁ'}`);
       }
 
       if (lupitaStatus === 'LEAVES') comments.push('Lupita se va 12pm');

@@ -302,6 +302,126 @@
   color: #0d47a1;
 }
 
+.day-btn.selected-pay {
+  background: #c8e6c9;
+  border-color: #43a047;
+  color: #1b5e20;
+}
+
+/* ── Mobile calendar ────────────────────────────────────── */
+@media (max-width: 639px) {
+  /* Prevent any element from causing horizontal scroll */
+  .calendar-print-area,
+  .calendar-grid {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .calendar-grid {
+    gap: 2px;
+    /* Use minmax(0,1fr) so cells CAN shrink below content width */
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .day-cell {
+    min-width: 0;        /* KEY: allow grid cell to shrink below content */
+    overflow: hidden;
+    min-height: 72px;
+    padding: 2px 1px;
+    border-radius: 6px;
+    border-width: 1.5px;
+  }
+
+  .day-number {
+    font-size: 0.95rem;
+  }
+
+  .day-name {
+    font-size: 0.42rem;
+    letter-spacing: 0;
+  }
+
+  .tutor-badge {
+    font-size: 0.38rem;
+    padding: 1px 2px;
+  }
+
+  .lupita-badge {
+    font-size: 0.38rem;
+    padding: 1px 2px;
+    border-radius: 3px;
+    letter-spacing: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pay-badge {
+    font-size: 0.36rem;
+    padding: 1px 2px;
+    border-radius: 3px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .note-badge {
+    font-size: 0.36rem;
+    padding: 1px 2px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .transition-badge {
+    font-size: 0.36rem;
+    padding: 1px 2px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .weekday-header {
+    font-size: 0.5rem;
+    padding: 4px 0;
+    letter-spacing: 0;
+  }
+
+  .comments-area {
+    font-size: 0.36rem;
+    min-height: 6px;
+    padding-top: 1px;
+  }
+
+  .comment-line {
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Ocultar hints editar/cerrado en mobile para ganar espacio */
+  .calendar-grid .no-print-pdf,
+  .no-pdf {
+    display: none !important;
+  }
+}
+
+/* Past days in saved calendars */
+.day-cell.day-past {
+  opacity: 0.5;
+  cursor: default !important;
+}
+.day-cell.day-past:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 /* Annotation lines */
 .annotation-lines {
   border-top: 1px dashed #999;
